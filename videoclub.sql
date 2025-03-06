@@ -19,7 +19,7 @@ create table direccion (
 	id serial primary key,
 	num_socio integer not null,
 	codigo_postal integer not null,
-	calle varchar(10) not null,
+	calle varchar(50) not null,
 	numero varchar(10) not null,
 	piso integer not null,
 	letra varchar(10) not null,
@@ -627,7 +627,13 @@ insert into socio (dni, nombre, apellido_1, apellido_2, fecha_nacimiento, telefo
 select distinct dni, nombre, apellido_1, apellido_2, cast(fecha_nacimiento as date), telefono, email  
 from tmp_videoclub;
 
-create unique index dni_sin_repetir on persona (lower(dni));
+create unique index dni_sin_repetir on socio (lower(dni));
+
+
+insert into direccion (num_socio, codigo_postal, calle, numero, piso, letra, ext)
+select distinct num_socio, cast (codigo_postal as integer), cast (calle as varchar(50)), numero, cast (piso as integer), cast(letra as varchar(10)), cast(ext as varchar(10)) 
+from tmp_videoclub t
+inner join socio s on s.dni = t.dni;
 
 
 
