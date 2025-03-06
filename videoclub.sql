@@ -623,9 +623,11 @@ INSERT INTO tmp_videoclub (id_copia,fecha_alquiler_texto,dni,nombre,apellido_1,a
 
 
 
+insert into socio (dni, nombre, apellido_1, apellido_2, fecha_nacimiento, telefono, email )
+select distinct dni, nombre, apellido_1, apellido_2, cast(fecha_nacimiento as date), telefono, email  
+from tmp_videoclub;
 
-
-
+create unique index dni_sin_repetir on persona (lower(dni));
 
 
 
