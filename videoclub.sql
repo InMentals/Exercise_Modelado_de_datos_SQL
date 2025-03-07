@@ -45,7 +45,7 @@ create table pelicula (
 	titulo varchar(80) not null,
 	id_genero integer not null,
 	director varchar(80) not null,
-	sinopsis varchar(1000)
+	sinopsis text
 );
 
 create table genero (
