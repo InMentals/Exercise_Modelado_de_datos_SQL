@@ -42,10 +42,10 @@ create table copia (
 
 create table pelicula (
 	id serial primary key,
-	titulo varchar(50) not null,
+	titulo varchar(80) not null,
 	id_genero integer not null,
 	director varchar(80) not null,
-	sinopsis varchar(200)
+	sinopsis varchar(1000)
 );
 
 create table genero (
@@ -634,11 +634,26 @@ select distinct num_socio, cast (codigo_postal as integer), cast (calle as varch
 from tmp_videoclub t
 inner join socio s on s.dni = t.dni;
 
-
 insert into genero (genero)
 select distinct genero from tmp_videoclub;
 
 create unique index genero_sin_repetir on genero (lower(genero));
+
+insert into pelicula (titulo, id_genero, director, sinopsis)
+select distinct titulo, g.id, director, sinopsis
+from tmp_videoclub t
+inner join genero g on g.genero = t.genero;
+
+create unique index titulo_sin_repetir on pelicula (lower(titulo));
+ 
+
+insert into copia (id_pelicula)
+select id from  (
+select distinct t.id_copia, p.id from tmp_videoclub t
+inner join pelicula p on p.titulo = t.titulo);
+
+
+
 
 
 
