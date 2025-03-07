@@ -27,7 +27,7 @@ create table direccion (
 );
 
 create table alquiler (
-	id integer primary key,
+	id serial primary key,
 	id_copia integer  not null,
 	num_socio integer not null,
 	fecha_alquiler date not null,
@@ -35,13 +35,13 @@ create table alquiler (
 );
 
 create table copia (
-	id integer primary key,
+	id serial primary key,
 	id_pelicula integer not null
 );
 
 
 create table pelicula (
-	id integer primary key,
+	id serial primary key,
 	titulo varchar(50) not null,
 	id_genero integer not null,
 	director varchar(80) not null,
@@ -49,7 +49,7 @@ create table pelicula (
 );
 
 create table genero (
-	id integer primary key,
+	id serial primary key,
 	genero varchar(50) not null
 );
 
@@ -629,11 +629,16 @@ from tmp_videoclub;
 
 create unique index dni_sin_repetir on socio (lower(dni));
 
-
 insert into direccion (num_socio, codigo_postal, calle, numero, piso, letra, ext)
 select distinct num_socio, cast (codigo_postal as integer), cast (calle as varchar(50)), numero, cast (piso as integer), cast(letra as varchar(10)), cast(ext as varchar(10)) 
 from tmp_videoclub t
 inner join socio s on s.dni = t.dni;
+
+
+insert into genero (genero)
+select distinct genero from tmp_videoclub;
+
+create unique index genero_sin_repetir on genero (lower(genero));
 
 
 
