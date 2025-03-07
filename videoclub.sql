@@ -649,18 +649,22 @@ create unique index titulo_sin_repetir on pelicula (lower(titulo));
 insert into copia (id_pelicula)
 select p.id
 from tmp_videoclub t
-inner join pelicula p on p.titulo = t.titulo group by t.id_copia, p.id;
+inner join pelicula p on p.titulo = t.titulo;
 
 
-/*insert into alquiler (id_copia, num_socio, fecha_alquiler, fecha_devolucion)
-select a.id_copia, num_socio, a.fecha_alquiler, a.fecha_devolucion
-from(
-	select t.dni, p.id as id_copia, p.titulo, t.fecha_alquiler, t.fecha_devolucion 
-	from tmp_videoclub t
-	inner join pelicula p on p.titulo = t.titulo
-) a
-inner join socio s on s.dni = a.dni;
-	*/
+
+insert into alquiler (id_copia, num_socio, fecha_alquiler, fecha_devolucion)
+select id_copia, socio.num_socio, fecha_alquiler, fecha_devolucion 
+from tmp_videoclub t
+inner join socio on socio.dni = t.dni;
+
+
+
+
+
+
+
+
 
 
 
