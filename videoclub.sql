@@ -12,7 +12,7 @@ create table socio (
 	fecha_nacimiento date not null,
 	telefono varchar (10) not null,
 	dni varchar(10) not null,
-	email varchar(50)
+	email varchar(50) not null
 );
 
 create table direccion (
@@ -653,15 +653,17 @@ inner join pelicula p on p.titulo = t.titulo group by t.id_copia, p.id;
 
 SELECT setval(pg_get_serial_sequence('copia', 'id'), 308);
 
-
 insert into alquiler (id_copia, num_socio, fecha_alquiler, fecha_devolucion)
 select id_copia, socio.num_socio, fecha_alquiler, fecha_devolucion 
 from tmp_videoclub t
 inner join socio on socio.dni = t.dni;
 
 
-
-
+-- Peliculas diponibles 
+select titulo from copia 
+left join (select * from alquiler where fecha_devolucion is null) no_disp
+on no_disp.id_copia = copia.id
+inner join pelicula on pelicula.id = copia.id_pelicula where no_disp.id is null;
 
 
 
