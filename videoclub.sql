@@ -22,8 +22,7 @@ create table direccion (
 	calle varchar(50) not null,
 	numero varchar(10) not null,
 	piso integer not null,
-	letra varchar(10) not null,
-	ext varchar(10) not null
+	letra varchar(10) not null
 );
 
 create table alquiler (
@@ -639,8 +638,8 @@ from tmp_videoclub;
 
 create unique index dni_sin_repetir on socio (lower(dni));
 
-insert into direccion (num_socio, codigo_postal, calle, numero, piso, letra, ext)
-select distinct num_socio, cast (codigo_postal as integer), cast (calle as varchar(50)), numero, cast (piso as integer), cast(letra as varchar(10)), cast(ext as varchar(10)) 
+insert into direccion (num_socio, codigo_postal, calle, numero, piso, letra)
+select distinct num_socio, cast (codigo_postal as integer), cast (calle as varchar(50)), numero, cast (piso as integer), cast(letra as varchar(10)) 
 from tmp_videoclub t
 inner join socio s on s.dni = t.dni;
 
