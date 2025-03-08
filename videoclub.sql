@@ -646,17 +646,19 @@ inner join genero g on g.genero = t.genero;
 
 create unique index titulo_sin_repetir on pelicula (lower(titulo));
 
-insert into copia (id_pelicula)
-select p.id
+insert into copia (id, id_pelicula)
+select t.id_copia, p.id
 from tmp_videoclub t
-inner join pelicula p on p.titulo = t.titulo;
+inner join pelicula p on p.titulo = t.titulo group by t.id_copia, p.id;
 
+SELECT setval(pg_get_serial_sequence('copia', 'id'), 308);
 
 
 insert into alquiler (id_copia, num_socio, fecha_alquiler, fecha_devolucion)
 select id_copia, socio.num_socio, fecha_alquiler, fecha_devolucion 
 from tmp_videoclub t
 inner join socio on socio.dni = t.dni;
+
 
 
 
