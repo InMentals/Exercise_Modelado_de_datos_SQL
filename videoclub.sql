@@ -44,13 +44,18 @@ create table pelicula (
 	id serial primary key,
 	titulo varchar(80) not null,
 	id_genero integer not null,
-	director varchar(80) not null,
+	id_director integer not null,
 	sinopsis text
 );
 
 create table genero (
 	id serial primary key,
 	genero varchar(50) not null
+);
+
+create table director (
+	id serial primary key,
+	nombre varchar(80) not null
 );
 
 alter table direccion 
@@ -77,6 +82,11 @@ alter table pelicula
 add constraint pelicula_genero_fk
 foreign key (id_genero)
 references genero (id);
+
+alter table pelicula 
+add constraint pelicula_director_fk
+foreign key (id_director)
+references director (id);
 
 -- Inicio la inserción de datos en una tabla auxiliar:
 CREATE TABLE tmp_videoclub (
@@ -639,10 +649,16 @@ select distinct genero from tmp_videoclub;
 
 create unique index genero_sin_repetir on genero (lower(genero));
 
-insert into pelicula (titulo, id_genero, director, sinopsis)
-select distinct titulo, g.id, director, sinopsis
+insert into director (nombre)
+select distinct director from tmp_videoclub;
+
+create unique index director_sin_repetir on director (lower(nombre));
+
+insert into pelicula (titulo, id_genero, id_director, sinopsis)
+select distinct titulo, g.id, d.id, t.sinopsis
 from tmp_videoclub t
-inner join genero g on g.genero = t.genero;
+inner join genero g on g.genero = t.genero
+inner join director d on d.nombre = t.director;
 
 create unique index titulo_sin_repetir on pelicula (lower(titulo));
 
@@ -663,11 +679,6 @@ select titulo, count(*) as copias from copia
 left join (select * from alquiler where fecha_devolucion is null) no_disp
 on no_disp.id_copia = copia.id
 inner join pelicula on pelicula.id = copia.id_pelicula where no_disp.id is null group by titulo;
-
-
-
-
-
 
 
 
