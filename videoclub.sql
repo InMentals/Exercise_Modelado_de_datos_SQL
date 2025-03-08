@@ -658,18 +658,11 @@ select id_copia, socio.num_socio, fecha_alquiler, fecha_devolucion
 from tmp_videoclub t
 inner join socio on socio.dni = t.dni;
 
-
--- Peliculas diponibles 
-select titulo from copia 
+-- Titulos con sus correspondientes copias disponibles 
+select titulo, count(*) as copias from copia 
 left join (select * from alquiler where fecha_devolucion is null) no_disp
 on no_disp.id_copia = copia.id
-inner join pelicula on pelicula.id = copia.id_pelicula where no_disp.id is null;
-
-
-
-
-
-
+inner join pelicula on pelicula.id = copia.id_pelicula where no_disp.id is null group by titulo;
 
 
 
