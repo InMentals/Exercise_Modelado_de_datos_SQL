@@ -4,6 +4,7 @@ create schema pablocemu;
 
 set schema 'pablocemu';
 
+--creo las tablas necesarias
 create table socio (
 	num_socio serial primary key,
 	nombre varchar(50) not null,
@@ -57,6 +58,9 @@ create table director (
 	nombre varchar(80) not null
 );
 
+
+
+-- establezco sus relaciones
 alter table direccion 
 add constraint direccion_socio_fk
 foreign key (num_socio)
@@ -631,7 +635,7 @@ INSERT INTO tmp_videoclub (id_copia,fecha_alquiler_texto,dni,nombre,apellido_1,a
 	 (308,'2024-01-25','1638778M','Angel','Lorenzo','Caballero','angel.lorenzo.caballero@gmail.com','698073069','47008','2011-07-30','82','1','Izq.','Sol','1Izq.','El bazar de las sorpresas','Comedia','Alfred Kralik es el tímido jefe de vendedores de Matuschek y Compañía, una tienda de Budapest. Todas las mañanas, los empleados esperan juntos la llegada de su jefe, Hugo Matuschek. A pesar de su timidez, Alfred responde al anuncio de un periódico y mantiene un romance por carta. Su jefe decide contratar a una tal Klara Novak en contra de la opinión de Alfred. En el trabajo, Alfred discute constantemente con ella, sin sospechar que es su corresponsal secreta.','Ernst Lubitsch','2024-01-25',NULL);
 
 
-
+--Extraigo los datos de la tabla auxiliar y los introduzco en sus correspondientes tablas
 insert into socio (dni, nombre, apellido_1, apellido_2, fecha_nacimiento, telefono, email )
 select distinct dni, nombre, apellido_1, apellido_2, cast(fecha_nacimiento as date), telefono, email  
 from tmp_videoclub;
@@ -673,7 +677,7 @@ select id_copia, socio.num_socio, fecha_alquiler, fecha_devolucion
 from tmp_videoclub t
 inner join socio on socio.dni = t.dni;
 
--- Titulos con sus correspondientes copias disponibles 
+-- Creo una vista con los titulos y sus copias disponibles 
 create view copias_disponibles as
 select titulo, count(*) as copias from copia 
 left join (select * from alquiler where fecha_devolucion is null) no_disp
@@ -681,4 +685,10 @@ on no_disp.id_copia = copia.id
 inner join pelicula on pelicula.id = copia.id_pelicula where no_disp.id is null group by titulo;
 
 select * from copias_disponibles;
+
+
+
+
+
+
 
