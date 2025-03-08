@@ -22,7 +22,7 @@ create table direccion (
 	calle varchar(50) not null,
 	numero varchar(10) not null,
 	piso integer not null,
-	letra varchar(10) not null
+	letra varchar(10) 
 );
 
 create table alquiler (
@@ -674,10 +674,11 @@ from tmp_videoclub t
 inner join socio on socio.dni = t.dni;
 
 -- Titulos con sus correspondientes copias disponibles 
+create view copias_disponibles as
 select titulo, count(*) as copias from copia 
 left join (select * from alquiler where fecha_devolucion is null) no_disp
 on no_disp.id_copia = copia.id
 inner join pelicula on pelicula.id = copia.id_pelicula where no_disp.id is null group by titulo;
 
-
+select * from copias_disponibles;
 
